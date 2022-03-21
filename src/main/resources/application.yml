@@ -1,0 +1,47 @@
+#给项目加一个路径  此时在浏览器器上就要输出localhost:8080/community/hello
+server:
+  servlet:
+    context-path: /community
+
+#关闭Thymeleaf的缓存
+spring:
+  thymeleaf:
+    cache: false
+  #配置数据库
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/community?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    password: root
+    username: root
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      #连接池最大连接数
+      maximum-pool-size: 15
+      minimum-idle: 5
+      #超时时间
+      idle-timeout: 30000
+
+#mybatis配置
+mybatis:
+  #配置映射文件路径
+  mapper-locations: classpath:mapper/*.xml
+  #配置实体类别名
+  type-aliases-package: com.rxue.entity
+  configuration:
+    #启用自动生成主键
+    use-generated-keys: true
+    #让下划线的命名方式和驼峰命名方式自动匹配
+    #header_url  headerUrl
+    map-underscore-to-camel-case: true
+#    #启动日志
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+#日志级别
+logging:
+  level:
+    com.rxue: debug
+##日志记录的路径和文件名
+#  file:
+#    path: 'E:/Java/workspace_idea/newCoder'
+#    name: 'community.log'
+

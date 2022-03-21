@@ -1,0 +1,5 @@
+2022-03-20 21:34:10,804 INFO [main] c.r.LoggerTest [StartupInfoLogger.java:55] Starting LoggerTest using Java 1.8.0_121 on RUXE-LEGION with PID 68768 (started by xuerun in E:\Java\workspace_idea\newCoder)
+2022-03-20 21:34:10,806 INFO [main] c.r.LoggerTest [SpringApplication.java:640] No active profile set, falling back to 1 default profile: "default"
+2022-03-20 21:34:12,442 INFO [main] o.s.b.a.w.s.WelcomePageHandlerMapping [WelcomePageHandlerMapping.java:57] Adding welcome page template: index
+2022-03-20 21:34:12,754 INFO [main] c.r.LoggerTest [StartupInfoLogger.java:61] Started LoggerTest in 2.352 seconds (JVM running for 3.059)
+2022-03-20 21:34:12,959 INFO [main] c.r.LoggerTest [LoggerTest.java:28] info log
