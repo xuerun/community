@@ -1,5 +1,6 @@
 package com.rxue;
 
+import com.rxue.util.newCoderUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -28,5 +29,7 @@ public class LoggerTest {
         logger.info("info log");
         logger.warn("warn log");
         logger.error("error log");
+
+        System.out.println(newCoderUtil.md5("123d9de2"));
     }
 }

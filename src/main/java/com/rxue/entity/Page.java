@@ -56,15 +56,15 @@ public class Page {
         this.path = path;
     }
 
-    //@Override
-    //public String toString() {
-    //    return "Page{" +
-    //            "current=" + current +
-    //            ", limit=" + limit +
-    //            ", rows=" + rows +
-    //            ", path='" + path + '\'' +
-    //            '}';
-    //}
+    @Override
+    public String toString() {
+        return "Page{" +
+                "current=" + current +
+                ", limit=" + limit +
+                ", rows=" + rows +
+                ", path='" + path + '\'' +
+                '}';
+    }
 
     /**
      * 获取当前页的起始行（当前页面第一条数据的偏移量）
