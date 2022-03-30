@@ -1,8 +1,11 @@
 package com.rxue.event;
 
 import com.alibaba.fastjson.JSONObject;
+import com.rxue.entity.DiscussPost;
 import com.rxue.entity.Event;
 import com.rxue.entity.Message;
+import com.rxue.service.DiscussPostService;
+import com.rxue.service.ElasticsearchService;
 import com.rxue.service.MessageService;
 import com.rxue.util.CommunityConstant;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -26,6 +29,12 @@ import java.util.Map;
 public class EventConsumer implements CommunityConstant {
     @Autowired
     private MessageService messageService;
+
+    @Autowired
+    private ElasticsearchService elasticsearchService;
+
+    @Autowired
+    private DiscussPostService discussPostService;
 
     private final static Logger loger = LoggerFactory.getLogger(EventConsumer.class);
 
@@ -63,5 +72,22 @@ public class EventConsumer implements CommunityConstant {
         }
         message.setContent(JSONObject.toJSONString(content));
         messageService.addMessage(message);
+    }
+
+    //消费发帖事件
+    @KafkaListener(topics = {TOPIC_PUBLISH})
+    public void handlePublishDiscuss(ConsumerRecord record){
+        if(record == null || record.value() == null){
+            loger.error("消息不能为空");
+            return;
+        }
+
+        Event event = JSONObject.parseObject(record.value().toString(), Event.class);
+        if(event == null){
+            loger.error("消息格式错误");
+            return;
+        }
+        DiscussPost discussPost = discussPostService.findDiscussById(event.getEntityId());
+        elasticsearchService.saveDiscussPost(discussPost);
     }
 }

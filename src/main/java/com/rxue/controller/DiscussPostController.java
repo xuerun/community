@@ -2,8 +2,10 @@ package com.rxue.controller;
 
 import com.rxue.entity.Comment;
 import com.rxue.entity.DiscussPost;
+import com.rxue.entity.Event;
 import com.rxue.entity.Page;
 import com.rxue.entity.User;
+import com.rxue.event.EventProducer;
 import com.rxue.service.CommentService;
 import com.rxue.service.DiscussPostService;
 import com.rxue.service.LikeService;
@@ -50,6 +52,9 @@ public class DiscussPostController implements CommunityConstant {
     @Autowired
     private LikeService likeService;
 
+    @Autowired
+    private EventProducer eventProducer;
+
     @PostMapping("/add")
     @ResponseBody
     public String addDiscussPost(String title, String content){
@@ -64,6 +69,13 @@ public class DiscussPostController implements CommunityConstant {
         discussPost.setUserId(user.getId());
         discussPost.setCreateTime(new Date());
         discussPostService.addDiscussPost(discussPost);
+
+        //触发发帖事件
+        Event event = new Event().setTopic(TOPIC_PUBLISH)
+                .setUserId(user.getId())
+                .setEntityType(ENTITY_TYPE_POST)
+                .setEntityId(discussPost.getId());
+        eventProducer.sendMessage(event);
 
         return newCoderUtil.getJsonString(0, "发布成功！");
     }
