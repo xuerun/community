@@ -10,7 +10,9 @@ import com.rxue.service.CommentService;
 import com.rxue.service.DiscussPostService;
 import com.rxue.util.CommunityConstant;
 import com.rxue.util.HostHolder;
+import com.rxue.util.RedisKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,6 +39,9 @@ public class CommentController implements CommunityConstant {
 
     @Autowired
     private EventProducer eventProducer;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     //增加帖子评论
     @LoginRequired
@@ -68,6 +73,11 @@ public class CommentController implements CommunityConstant {
                     .setEntityId(discussPostId)
                     .setUserId(user.getId());
             eventProducer.sendMessage(event);
+
+            //如果是评论 将帖子的id加入redis中，等待重新计算分数
+            String postScoreKey = RedisKeyUtil.getPostScoreKey();
+            redisTemplate.opsForSet().add(postScoreKey, discussPostId);
+
         }
 
 

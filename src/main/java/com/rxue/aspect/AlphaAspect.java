@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
  * @create 2022-03-26 09:20
  * @Description 切面组件
  */
-@Component
-@Aspect//把当前类标识为一个切面
+//@Component
+//@Aspect//把当前类标识为一个切面
 public class AlphaAspect {
 
     @Pointcut("execution(* com.rxue.service.*.*(..))")

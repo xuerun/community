@@ -1,6 +1,7 @@
 package com.rxue.config;
 
 import com.rxue.controller.interceptor.AlphaInterceptor;
+import com.rxue.controller.interceptor.DataInterceptor;
 import com.rxue.controller.interceptor.LoginRequiredInterceptor;
 import com.rxue.controller.interceptor.LoginTicketInterceptor;
 import com.rxue.controller.interceptor.MessageInterceptor;
@@ -22,11 +23,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Autowired
     private LoginTicketInterceptor loginTicketInterceptor;
 
-    @Autowired
-    private LoginRequiredInterceptor loginRequiredInterceptor;
+    //@Autowired
+    //private LoginRequiredInterceptor loginRequiredInterceptor;
 
     @Autowired
     private MessageInterceptor messageInterceptor;
+
+    @Autowired
+    private DataInterceptor dataInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -36,8 +40,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         registry.addInterceptor(loginTicketInterceptor).excludePathPatterns("/css/**", "/img/**", "/js/**");
 
-        registry.addInterceptor(loginRequiredInterceptor).excludePathPatterns("/css/**", "/img/**", "/js/**");
+        //registry.addInterceptor(loginRequiredInterceptor).excludePathPatterns("/css/**", "/img/**", "/js/**");
 
         registry.addInterceptor(messageInterceptor).excludePathPatterns("/css/**", "/img/**", "/js/**");
+
+        registry.addInterceptor(dataInterceptor).excludePathPatterns("/css/**", "/img/**", "/js/**");
     }
 }

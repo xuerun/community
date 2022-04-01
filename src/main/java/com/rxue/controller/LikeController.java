@@ -7,8 +7,10 @@ import com.rxue.event.EventProducer;
 import com.rxue.service.LikeService;
 import com.rxue.util.CommunityConstant;
 import com.rxue.util.HostHolder;
+import com.rxue.util.RedisKeyUtil;
 import com.rxue.util.newCoderUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -31,6 +33,9 @@ public class LikeController implements CommunityConstant {
 
     @Autowired
     private EventProducer eventProducer;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     //使用异步请求  返回json字符串
     @PostMapping("/like")
@@ -60,6 +65,11 @@ public class LikeController implements CommunityConstant {
             eventProducer.sendMessage(event);
         }
 
+        //如果是对帖子进行点赞， 将帖子的id存入redis中 等待计算分数
+        if(entityType == ENTITY_TYPE_POST){
+            String postScoreKey = RedisKeyUtil.getPostScoreKey();
+            redisTemplate.opsForSet().add(postScoreKey, postId);
+        }
 
         Map<String, Object> map = new HashMap<>();
         map.put("likeCount", likeCount);

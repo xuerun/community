@@ -12,8 +12,10 @@ import com.rxue.service.LikeService;
 import com.rxue.service.UserService;
 import com.rxue.util.CommunityConstant;
 import com.rxue.util.HostHolder;
+import com.rxue.util.RedisKeyUtil;
 import com.rxue.util.newCoderUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,6 +57,9 @@ public class DiscussPostController implements CommunityConstant {
     @Autowired
     private EventProducer eventProducer;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     @PostMapping("/add")
     @ResponseBody
     public String addDiscussPost(String title, String content){
@@ -76,6 +81,10 @@ public class DiscussPostController implements CommunityConstant {
                 .setEntityType(ENTITY_TYPE_POST)
                 .setEntityId(discussPost.getId());
         eventProducer.sendMessage(event);
+
+        //新增帖子的时候，将帖子的id存入redis中，每半个小时计算一次分数
+        String postScoreKey = RedisKeyUtil.getPostScoreKey();
+        redisTemplate.opsForSet().add(postScoreKey, discussPost.getId());
 
         return newCoderUtil.getJsonString(0, "发布成功！");
     }
@@ -160,4 +169,58 @@ public class DiscussPostController implements CommunityConstant {
         model.addAttribute("comments", commentVoList);
         return "/site/discuss-detail";
     }
+
+    //帖子置顶(移除置顶)  提交信息用post
+    @PostMapping ("/top")
+    @ResponseBody
+    public String setTop(int id){
+        discussPostService.updateType(id, 1);
+
+
+        //触发发帖事件（发布相同的帖子就会更新之前的帖子）
+        Event event = new Event().setTopic(TOPIC_PUBLISH)
+                .setUserId(hostHolder.getUser().getId())
+                .setEntityType(ENTITY_TYPE_POST)
+                .setEntityId(id);
+        eventProducer.sendMessage(event);
+
+        return newCoderUtil.getJsonString(0, "置顶成功！");
+    }
+
+    //帖子加精(取消加精)
+    @PostMapping("/wonderful")
+    @ResponseBody
+    public String setWonderful(int id){
+        discussPostService.updateStatus(id, 1);
+
+        //触发发帖事件（发布相同的帖子就会更新之前的帖子）
+        Event event = new Event().setTopic(TOPIC_PUBLISH)
+                .setUserId(hostHolder.getUser().getId())
+                .setEntityType(ENTITY_TYPE_POST)
+                .setEntityId(id);
+        eventProducer.sendMessage(event);
+
+        //加精的时候，将帖子的id存入redis中  等待计算帖子分数
+        String postScoreKey = RedisKeyUtil.getPostScoreKey();
+        redisTemplate.opsForSet().add(postScoreKey, id);
+
+        return newCoderUtil.getJsonString(0, "加精成功！");
+    }
+
+    //帖子删除
+    @PostMapping("/delete")
+    @ResponseBody
+    public String setDelete(int id){
+        discussPostService.updateStatus(id, 2);
+
+        //触发发帖事件（发布相同的帖子就会更新之前的帖子）
+        Event event = new Event().setTopic(TOPIC_DELETE)
+                .setUserId(hostHolder.getUser().getId())
+                .setEntityType(ENTITY_TYPE_POST)
+                .setEntityId(id);
+        eventProducer.sendMessage(event);
+
+        return newCoderUtil.getJsonString(0, "删帖成功！");
+    }
+
 }

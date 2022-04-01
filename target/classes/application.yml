@@ -53,6 +53,22 @@ spring:
 #      cluster-nodes: localhost:9300
       repositories:
         enabled: true
+  #TaskExecutionProperties
+  task:
+    execution:
+      pool:
+        core-size: 5 #核心线程数
+        max-size: 15 #最大线程数
+        queue-capacity: 100 #当已经达到最大线程数还不够用，就存在队列中，这个队列的容量为100
+    #TaskSchedulingProperties
+    scheduling:
+      pool:
+        size: 5
+
+
+
+
+
 
 #mybatis配置
 mybatis:

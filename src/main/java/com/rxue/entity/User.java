@@ -1,9 +1,14 @@
 package com.rxue.entity;
 
+import com.rxue.service.UserService;
 import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author RunXue

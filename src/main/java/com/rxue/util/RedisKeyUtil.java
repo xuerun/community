@@ -14,6 +14,9 @@ public class RedisKeyUtil {
     private static final String KAPTCHA = "kaptcha";
     private static final String TICKET = "ticket";
     private static final String USER = "user";
+    private static final String UV = "uv";
+    private static final String DAU = "dau";
+    private static final String POST = "post";
 
     //生成某个实体的点赞的key
     //格式like：entity：entityType：entityId   值用set存  存的是userId 给点赞的用户的id
@@ -50,5 +53,30 @@ public class RedisKeyUtil {
     //生成用户id的key
     public static String getUserKey(int userId){
         return USER + SPLIT + userId;
+    }
+
+    //单日UV的key
+    public static String getUvKey(String date){
+        return UV + SPLIT + date;
+    }
+
+    //区间UV的key
+    public static String getUvKey(String start, String end){
+        return UV + SPLIT + start + SPLIT + end;
+    }
+
+    //单日活跃用户的key
+    public static String getDauKey(String date){
+        return DAU + SPLIT + date;
+    }
+
+    //区间活跃用户的key
+    public static String getDauKey(String start, String end){
+        return DAU + SPLIT + start + SPLIT + end;
+    }
+
+    //帖子分数的key
+    public static String getPostScoreKey(){
+        return POST + SPLIT + "score";
     }
 }
