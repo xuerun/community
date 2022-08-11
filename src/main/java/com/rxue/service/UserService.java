@@ -136,7 +136,6 @@ public class UserService implements CommunityConstant {
         //激活链接 http://localhost:8080/community/activation/101/code  该链接中携带userId和激活码信息
         String url = domain + contextPath + activationPath + user.getId() + "/" + user.getActivationCode();
         context.setVariable("url", url);
-        System.out.println("url = " + url);
         String content = templateEngine.process("/mail/activation", context);
         mailClient.sendMail(user.getEmail(), "激活账号", content);
 
@@ -253,6 +252,8 @@ public class UserService implements CommunityConstant {
 
         //将新密码添加进数据库
         userMapper.updatePassword(user.getId(), newCoderUtil.md5(newPassword + user.getSalt()));
+        //清除缓存
+        clearCache(user.getId());
         return map;
     }
 

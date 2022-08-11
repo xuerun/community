@@ -57,7 +57,7 @@ public class FollowController implements CommunityConstant {
                 .setEntityUserId(entityId);
         eventProducer.sendMessage(event);
 
-        return newCoderUtil.getJsonString(0, "点赞成功");
+        return newCoderUtil.getJsonString(0, "关注成功");
     }
 
     @LoginRequired
@@ -66,7 +66,7 @@ public class FollowController implements CommunityConstant {
     public String unfollow(int entityType, int entityId){
         User user = hostHolder.getUser();
         followService.unFollow(user.getId(), entityType, entityId);
-        return newCoderUtil.getJsonString(0, "已取消点赞");
+        return newCoderUtil.getJsonString(0, "已取消关注");
     }
 
     //某个用户关注的人的列表

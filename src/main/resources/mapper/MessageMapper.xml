@@ -44,13 +44,13 @@
     <select id="selectConversationCount" resultType="java.lang.Integer">
         select count(*)
         from (
-                 select max(id)
-                 from message
-                 where status != 2
-            and from_id != 1
-            and (from_id = #{fromId}
-                    OR to_id = #{toId})
-                 group by conversation_id
+                select max(id)
+                from message
+                where status != 2
+                and from_id != 1
+                and (from_id = #{fromId}
+                OR to_id = #{toId})
+                group by conversation_id
              ) max_id
     </select>
     <select id="selectMessages" resultType="message">

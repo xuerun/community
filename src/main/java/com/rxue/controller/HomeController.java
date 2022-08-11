@@ -66,6 +66,7 @@ public class HomeController implements CommunityConstant {
 
         model.addAttribute("discussPosts", discussPosts);
         model.addAttribute("orderMode", orderMode);
+
         return "index";
     }
 

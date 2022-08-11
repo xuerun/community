@@ -33,7 +33,6 @@ public class LoginRequiredInterceptor implements HandlerInterceptor {
             LoginRequired annotation = method.getAnnotation(LoginRequired.class);
             if(annotation != null && hostHolder.getUser() == null){
                 response.sendRedirect(request.getContextPath() + "/login");//request.getContextPath() = /community
-                System.out.println("request.getContextPath() = " + request.getContextPath());
                 return false;
             }
         }

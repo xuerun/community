@@ -103,3 +103,23 @@ newCoder:
     upload: E:/Java/workspace_idea/newCoder/data/upload/
 
 
+#wk
+wk:
+  image:
+    command: E:/wkhtmltopdf/bin/wkhtmltoimage
+    storage: E:/Java/workspace_idea/newCoder/wk-images
+
+#caffeine
+caffeine:
+  posts:
+    max-size: 15 #最大存15个
+    expire-seconds: 180 #三分钟过期
+
+#actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        #所有的端口都暴露  在关闭几个端口
+        include: '*'
+        exclude: caches

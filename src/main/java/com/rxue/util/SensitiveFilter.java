@@ -95,49 +95,48 @@ public class SensitiveFilter {
         int position = 0;
         //结果
         StringBuilder sb = new StringBuilder();
-        while (begin < text.length()){
-            if(position < text.length()){
-                char c = text.charAt(position);
+        while (position < text.length()){
+            char c = text.charAt(position);
 
-                //跳过字符
-                if(isSymbol(c)){
-                    // 若指针1处于根节点，将此符号计入结果，让指针2指向下一步
-                    if(tempNode == rootNode){
-                        sb.append(c);
-                        begin++;
-                    }
-                    //无论符号在开头或者中间，指针3都向下走一步
-                    position++;
-                    continue;
-                }
-
-                //检查下一节点
-                tempNode = tempNode.getSubNode(c);
-                if(tempNode == null){
-                    //说明begin指向的字符不是敏感词的组成部分
+            //跳过字符
+            if (isSymbol(c)) {
+                // 若指针1处于根节点，将此符号计入结果，让指针2指向下一步
+                if (tempNode == rootNode) {
                     sb.append(c);
                     begin++;
-                    position = begin;
-                    //重新指向根节点，从下一个字符来判断是否是敏感词
-                    tempNode = rootNode;
-                }else if(tempNode.isKeywordEnd){
-                    //isKeywordEnd为true的话，说明已经找到了敏感词，用替换符进行替换，
-                    sb.append(REPLACEMENT);
-                    position++;
-                    begin = position;
-                    tempNode = rootNode;
-                }else {
-                    //检查下一个字符
-                    position++;
                 }
-            }else {
-                //position遍历越界未匹配到敏感词不代表以begin的下一位开始不是敏感词的的开始，比如abc是敏感词，text的最后四个字符是fabc，而根节点中有个敏感词为fabd
-                //这时候回顺着fabd这个分支去寻找，没找到应该让begin右移移位继续寻找
+                //无论符号在开头或者中间，指针3都向下走一步
+                position++;
+                continue;
+            }
+
+            //检查下一节点
+            tempNode = tempNode.getSubNode(c);
+            if (tempNode == null) {
+                //说明begin指向的字符不是敏感词的组成部分
                 sb.append(text.charAt(begin));
                 begin++;
                 position = begin;
+                //重新指向根节点，从下一个字符来判断是否是敏感词
                 tempNode = rootNode;
+            } else if (tempNode.isKeywordEnd) {
+                //isKeywordEnd为true的话，说明已经找到了敏感词，用替换符进行替换，
+                sb.append(REPLACEMENT);
+                position++;
+                begin = position;
+                tempNode = rootNode;
+            } else {
+                //检查下一个字符
+                position++;
             }
+            //}else {
+            //    //position遍历越界未匹配到敏感词不代表以begin的下一位开始不是敏感词的的开始，比如abc是敏感词，text的最后四个字符是fabc，而根节点中有个敏感词为fabd
+            //    //这时候回顺着fabd这个分支去寻找，没找到应该让begin右移移位继续寻找
+            //    sb.append(text.charAt(begin));
+            //    begin++;
+            //    position = begin;
+            //    tempNode = rootNode;
+            //}
         }
         return sb.toString();
     }

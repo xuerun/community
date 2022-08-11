@@ -82,7 +82,6 @@ public class LoginController implements CommunityConstant {
     @GetMapping("/activation/{userId}/{code}")
     public String activation(Model model, @PathVariable("userId") int userId, @PathVariable("code") String code){
         int result = userService.activation(userId, code);
-        System.out.println("收到请求");
         if(result == ACTIVATION_SUCCESS){//激活成功跳到登录界面
             model.addAttribute("msg", "激活成功，您的账号已经可以正常使用了！");
             model.addAttribute("target", "/login");

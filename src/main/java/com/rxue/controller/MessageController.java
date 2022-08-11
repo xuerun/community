@@ -118,10 +118,8 @@ public class MessageController implements CommunityConstant {
         String[] id = conversationId.split("_");
         int id0 = Integer.parseInt(id[0]);
         int id1 = Integer.parseInt(id[1]);
-        User user =  hostHolder.getUser().getId() == id0?
+        return hostHolder.getUser().getId() == id0?
                 userService.findUserById(id1):userService.findUserById(id0);
-        System.out.println("user = " + user);
-        return user;
     }
 
     //获取接收到的私信是未读状态的id列表集合
@@ -183,7 +181,6 @@ public class MessageController implements CommunityConstant {
             //该主题下全部通知的数量
             int noticeCount = messageService.findNoticeCount(user.getId(), TOPIC_COMMENT);
             map.put("noticeCount", noticeCount);
-            System.out.println("noticeCount = " + noticeCount);
             //该主题下未读通知的数量
             int noticeUnreadCount = messageService.findNoticeUnreadCount(user.getId(), TOPIC_COMMENT);
             map.put("noticeUnreadCount", noticeUnreadCount);

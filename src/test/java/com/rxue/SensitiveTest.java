@@ -22,7 +22,7 @@ public class SensitiveTest {
 
     @Test
     public void testSensitiveFilter(){
-        String text = "赌博吗";
+        String text = "赌赌博你要开票吗";
         text = sensitiveFilter.filter(text);
         System.out.println("text = " + text);
     }
